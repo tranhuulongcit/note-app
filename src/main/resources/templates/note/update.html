@@ -3,17 +3,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="note/main">
 <head>
-    <title>Update note - NoteApp</title>
+    <title>Update note</title>
 </head>
 <body>
-<main layout:fragment="contentPage">
+<div layout:fragment="contentPage">
     <th:block th:if="${note != null}">
-        <h2 style="margin-bottom: 20px">Update Note</h2>
-        <th:block th:replace="note/form :: form"/>
+        <h2 style="margin-bottom: 20px" th:text="#{label.update}"></h2>
+        <th:block th:replace="note/component :: form"/>
     </th:block>
     <th:block th:unless="${note != null}">
         <h2 style="margin-bottom: 20px">Not found!</h2>
     </th:block>
-</main>
+</div>
 </body>
 </html>

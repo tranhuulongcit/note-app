@@ -3,21 +3,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="note/main">
 <head>
-    <title>Detail - NoteApp</title>
+    <title>Detail</title>
 </head>
 
 <body>
-<main layout:fragment="contentPage">
-    <div style="margin-top: 30px; margin-bottom: 20px" class="col-md-12" th:if="${messageSuccess != null || messageError != null}">
-        <div th:classappend="${messageSuccess == null ? 'alert-danger' : 'alert-success'}" class="sufee-alert alert with-close alert-dismissible fade show">
-            <span th:classappend="${messageSuccess == null ? 'badge-danger' : 'badge-success'}" th:text="${messageSuccess == null ? 'Error' : 'Success'}" class="badge badge-pill">[msg]</span>
-            <th:block th:text="${messageSuccess == null ? messageError : messageSuccess}">
-            </th:block>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
+<div layout:fragment="contentPage">
+    <th:block th:replace="note/component :: alert(${messageSuccess}, ${messageError})"/>
     <th:block th:unless="${note != null}">
         <h2 style="margin-bottom: 20px">Not found!</h2>
     </th:block>
@@ -26,8 +17,8 @@
         <h4 style="margin-bottom: 20px" th:utext="${note.content}"></h4>
         <small style="margin-top: 150px" class="text-muted" th:text="${T(info.cafeit.noteapp.utils.DateUtils).formatDate(note.createdDate)}"></small>
         <div style="float: right">
-            <a th:href="${'/note/update/' + note.id}" class="btn btn-warning">Update</a>
-            <a data-toggle="modal" data-target="#confirmDelete" href="#" class="btn btn-danger">Delete</a>
+            <a th:href="@{/notes/update/{id}(id=${note.id})}" class="btn btn-warning" th:text="#{btn.update.text}"></a>
+            <a data-toggle="modal" data-target="#confirmDelete" href="#" class="btn btn-danger" th:text="#{btn.delete.text}"></a>
         </div>
         <!-- Modal -->
         <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -40,16 +31,16 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        Are you sure delete note?
+                        [[#{msg.delete.confirm}]]
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <a th:href="${'/note/delete/' + note.id}" class="btn btn-primary">Delete</a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{btn.close.text}"></button>
+                        <a th:href="@{/notes/delete/{id}(id=${note.id})}" class="btn btn-primary" th:text="#{btn.delete.text}"></a>
                     </div>
                 </div>
             </div>
         </div>
     </th:block>
-</main>
+</div>
 </body>
 </html>

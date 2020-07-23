@@ -54,27 +54,4 @@ public class NoteAppApplication implements CommandLineRunner {
         note4.setUpdatedDate(new Date());
         noteRepository.saveAll(Arrays.asList(note1, note2, note3, note4));
     }
-
-    @Bean
-    public LayoutDialect layoutDialect() {
-        return new LayoutDialect();
-    }
-
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource
-                = new ReloadableResourceBundleMessageSource();
-
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Bean
-    public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource());
-        return bean;
-    }
-
 }

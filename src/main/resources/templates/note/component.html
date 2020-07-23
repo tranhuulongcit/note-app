@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<form th:fragment="form" th:action="@{/notes}" th:object="${note}" method="post">
+    <input type="hidden" th:field="*{id}">
+    <div class="form-group">
+        <label for="title" th:text="#{label.title}"></label>
+        <input type="text" class="form-control" th:field="*{title}" th:errorclass="is-invalid">
+        <small class="form-text invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">[msg]</small>
+    </div>
+    <div class="form-group">
+        <label for="content" th:text="#{label.content}"></label>
+        <textarea class="form-control" th:field="*{content}" rows="3"  th:errorclass="is-invalid"></textarea>
+        <small class="form-text invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">[msg]</small>
+    </div>
+    <button type="submit" class="btn btn-primary" th:text="${note.id != null} ? #{btn.update.text} : #{btn.save.text}"></button>
+</form>
+
+<div th:fragment="alert(msgSuccess, msgError)" style="margin-top: 30px; margin-bottom: 20px" class="col-md-12" th:if="${msgSuccess != null || msgError != null}">
+    <div th:classappend="${msgSuccess == null ? 'alert-danger' : 'alert-success'}" class="sufee-alert alert with-close alert-dismissible fade show">
+        <span th:classappend="${msgSuccess == null ? 'badge-danger' : 'badge-success'}" th:text="${msgSuccess == null ? 'Error' : 'Success'}" class="badge badge-pill">[msg]</span>
+        <th:block th:text="${msgSuccess == null ? msgError : msgSuccess}">
+        </th:block>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+</body>
+</html>

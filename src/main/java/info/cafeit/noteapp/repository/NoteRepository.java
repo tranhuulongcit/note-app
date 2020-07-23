@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface NoteRepository extends JpaRepository<NoteEntity, Integer> {
 
-    @Query("Select n from NoteEntity n where n.title like %:keyword% or n.content like %:keyword% order by n.title asc")
+    @Query("Select n from NoteEntity n where lower(n.title) like %:keyword% or lower(n.content) like %:keyword% order by n.title asc")
     List<NoteEntity> search(String keyword);
 }

@@ -32,6 +32,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    @Transactional
     public boolean deleteNote(Integer id) {
         try {
             noteRepository.deleteById(id);
@@ -42,17 +43,20 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<NoteEntity> getNote(Integer id) {
         return noteRepository.findById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<NoteEntity> getNotes() {
         return noteRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<NoteEntity> search(String keyword) {
-        return noteRepository.search(keyword);
+        return noteRepository.search(keyword.toLowerCase());
     }
 }

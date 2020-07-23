@@ -3,18 +3,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="note/main">
 <head>
-    <title>Search - NoteApp</title>
+    <title>Search</title>
 </head>
 <body>
-<main layout:fragment="contentPage">
+<div layout:fragment="contentPage">
     <div th:unless="${#lists.isEmpty(notes)}">
         <h2>[[${notes.size()}]] results for "[[${keyword}]]"</h2>
     </div>
     <div th:if="${#lists.isEmpty(notes)}">
-        <h2>Note not found!</h2>
+        <h2 th:text="#{msg.search.notfound}"></h2>
     </div>
     <div th:unless="${#lists.isEmpty(notes)}" class="list-group">
-        <a th:each="note : ${notes}" th:href="${'/note/' + note.id}" class="list-group-item list-group-item-action">
+        <a th:each="note : ${notes}" th:href="${'/notes/' + note.id}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1 truncate-1" th:text="${note.title}">title</h5>
                 <small th:text="${T(info.cafeit.noteapp.utils.DateUtils).getTimeAgo(note.createdDate.time)}">3 days ago</small>
@@ -23,6 +23,6 @@
         </a>
     </div>
 
-</main>
+</div>
 </body>
 </html>

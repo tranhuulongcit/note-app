@@ -4,10 +4,13 @@ import info.cafeit.noteapp.dto.NoteDto;
 import info.cafeit.noteapp.entity.NoteEntity;
 import info.cafeit.noteapp.service.NoteService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -15,9 +18,11 @@ import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping(value = "/note")
+@RequestMapping(value = "/notes")
+@PropertySource("classpath:messages.properties")
 public class NoteController {
     private final NoteService noteService;
+    private final Environment env;
 
     @GetMapping("")
     public String home(Model model) {
@@ -28,11 +33,7 @@ public class NoteController {
     @GetMapping("/{id}")
     public String detail(@PathVariable("id") Integer id, Model model) {
         Optional<NoteEntity> note = noteService.getNote(id);
-        if (note.isPresent()) {
-            model.addAttribute("note", note.get());
-        } else {
-            model.addAttribute("note", null);
-        }
+        model.addAttribute("note", note.get());
         return "note/detail";
     }
 
@@ -49,20 +50,20 @@ public class NoteController {
         return "note/update";
     }
 
-    @PostMapping(value = "/create")
-    public String createNote(@Valid @ModelAttribute("note") NoteDto noteDto, BindingResult binding, RedirectAttributes ra) {
+    @PostMapping("")
+    public String createOrUpdateNote(@Valid @ModelAttribute("note") NoteDto noteDto, BindingResult binding, RedirectAttributes ra) {
         if (noteDto != null && noteDto.getId() != null) {
             //do update
-            if (binding.hasErrors()) {
+            if (true) {
                 return "note/update";
             }
             Optional<NoteEntity> note = noteService.updateNote(noteDto);
             if (note.isPresent()) {
-                ra.addFlashAttribute("messageSuccess", "Update note success!");
+                ra.addFlashAttribute("messageSuccess", env.getProperty("msg.update.success"));
             } else {
-                ra.addFlashAttribute("messageError", "Update note error!");
+                ra.addFlashAttribute("messageError", env.getProperty("msg.update.error"));
             }
-            return "redirect:/note/" + noteDto.getId();
+            return "redirect:/notes/" + noteDto.getId();
         } else {
             // do insert
             if (binding.hasErrors()) {
@@ -70,23 +71,23 @@ public class NoteController {
             }
             Optional<NoteEntity> note = noteService.saveNote(noteDto);
             if (note.isPresent()) {
-                ra.addFlashAttribute("messageSuccess", "Save note success!");
+                ra.addFlashAttribute("messageSuccess", env.getProperty("msg.save.success"));
             } else {
-                ra.addFlashAttribute("messageError", "Save note error!");
+                ra.addFlashAttribute("messageError", env.getProperty("msg.save.error"));
             }
+            return "redirect:/notes";
         }
-        return "redirect:/note";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id, RedirectAttributes ra) {
         boolean hasSuccess = noteService.deleteNote(id);
         if (hasSuccess) {
-            ra.addFlashAttribute("messageSuccess", "Delete note success!");
+            ra.addFlashAttribute("messageSuccess", env.getProperty("msg.delete.success"));
         } else {
-            ra.addFlashAttribute("messageError", "Delete note error!");
+            ra.addFlashAttribute("messageError", env.getProperty("msg.delete.error"));
         }
-        return "redirect:/note";
+        return "redirect:/notes";
     }
 
     @GetMapping("/search")
