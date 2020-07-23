@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="note/main">
+<head>
+    <title>Home - NoteApp</title>
+</head>
+<body>
+<main layout:fragment="contentPage">
+    <div style="margin-top: 30px; margin-bottom: 20px" class="col-md-12" th:if="${messageSuccess != null || messageError != null}">
+        <div th:classappend="${messageSuccess == null ? 'alert-danger' : 'alert-success'}" class="sufee-alert alert with-close alert-dismissible fade show">
+            <span th:classappend="${messageSuccess == null ? 'badge-danger' : 'badge-success'}" th:text="${messageSuccess == null ? 'Error' : 'Success'}" class="badge badge-pill">[msg]</span>
+            <th:block th:text="${messageSuccess == null ? messageError : messageSuccess}">
+            </th:block>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(notes)}" class="list-group">
+        <a th:each="note : ${notes}" th:href="${'/note/' + note.id}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1 truncate-1" th:text="${note.title}">title</h5>
+                <small th:text="${T(info.cafeit.noteapp.utils.DateUtils).getTimeAgo(note.createdDate.time)}">3 days ago</small>
+            </div>
+            <p class="mb-1 truncate-2" th:text="${note.content}">content</p>
+        </a>
+    </div>
+    <div th:if="${#lists.isEmpty(notes)}">
+        <h2>Note empty!</h2>
+    </div>
+</main>
+</body>
+</html>

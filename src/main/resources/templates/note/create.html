@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="note/main">
+<head>
+    <title>Create note - NoteApp</title>
+</head>
+<body>
+    <main layout:fragment="contentPage">
+        <h2 style="margin-bottom: 20px">Create Note</h2>
+        <th:block th:replace="note/form :: form"/>
+    </main>
+</body>
+</html>
